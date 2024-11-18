@@ -1,0 +1,20 @@
+variables: 
+  DOCKER_TLS_CERTDIR: "/certs"
+  TAG: $CI_COMMIT_SHORT_SHA
+  
+stages:
+  - build-publish
+
+before_script:
+  - echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+
+build-publish-app:
+  stage: build-publish
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$TAG .
+    - docker push $CI_REGISTRY_IMAGE:$TAG
+  # only:
+  #   - main
