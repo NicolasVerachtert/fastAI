@@ -1,0 +1,10 @@
+.idea
+.DS_Store
+.venv
+.env
+data/chroma/*
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/*
+*.py[cod]
