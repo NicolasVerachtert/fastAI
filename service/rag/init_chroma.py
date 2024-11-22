@@ -1,4 +1,4 @@
-from langchain_community.document_loaders import PyPDFDirectoryLoader
+from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.schema.document import Document
 from langchain_chroma import Chroma
@@ -7,18 +7,23 @@ import os
 import shutil
 import logging
 from config import CHROMA_PATH, DOCS_PATH
+from typing import List
+
+logger = logging.getLogger("app")
 
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[logging.StreamHandler()]
-)
-logger = logging.getLogger(__name__)
+def init_chroma(reset: bool = False) -> None:
+    """
+    Initializes the Chroma database by processing documents in the local directory.
 
-def init_chroma(reset=False):
+    Args:
+        reset (bool): If True, clears the database before processing.
+        
+    Returns:
+        None
+    """
     if reset:
-        logger.info("✨ Clearing Database")
+        logger.info("Clearing Database")
         clear_database()
 
     # Create (or update) the data store.
@@ -27,12 +32,65 @@ def init_chroma(reset=False):
     add_to_chroma(chunks)
 
 
-def load_documents():
-    document_loader = PyPDFDirectoryLoader(DOCS_PATH)
-    return document_loader.load()
+def load_documents() -> List[Document]:
+    """
+    Loads documents from the local directory, handling both PDF and TXT formats.
+
+    Returns:
+        list: A list of document contents.
+    """
+
+    # Load documents from both PDFs and TXT files
+    documents = []
+    for file_name in os.listdir(DOCS_PATH):
+        file_path = os.path.join(DOCS_PATH, file_name)
+        if file_name.endswith('.pdf'):
+            documents.extend(load_from_pdf(file_path))
+        elif file_name.endswith('.txt'):
+            documents.extend(load_from_txt(file_path))
+    return documents
 
 
-def split_documents(documents: list[Document]):
+def load_from_pdf(file_path: str) -> List[Document]:
+    """
+    Loads content from a PDF file.
+
+    Args:
+        file_path (str): Path to the PDF file.
+
+    Returns:
+        list: A list of document content (e.g., pages or sections).
+    """
+    logger.info(f"Loading PDF file: {file_path}")
+    loader = PyPDFLoader(file_path)
+    return loader.load()
+
+
+def load_from_txt(file_path: str) -> List[Document]:
+    """
+    Loads content from a TXT file.
+
+    Args:
+        file_path (str): Path to the TXT file.
+
+    Returns:
+        list: A list of document content (e.g., pages or sections).
+    """
+    logger.info(f"Loading TXT file: {file_path}")
+    loader = TextLoader(file_path)
+    return loader.load()
+
+
+def split_documents(documents: List[Document]) -> list[Document]:
+    """
+    Splits documents into smaller chunks for processing.
+
+    Args:
+        documents (list): A list of document contents.
+
+    Returns:
+        list: A list of document chunks.
+    """
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=500,
         chunk_overlap=100,
@@ -42,7 +100,16 @@ def split_documents(documents: list[Document]):
     return text_splitter.split_documents(documents)
 
 
-def add_to_chroma(chunks: list[Document]):
+def add_to_chroma(chunks: list[Document]) -> None:
+    """
+   Adds document chunks to the Chroma database.
+
+   Args:
+       chunks (List[Document]): A list of document chunks.
+
+   Returns:
+       None
+   """
     # Load the existing database.
     db = Chroma(
         persist_directory=CHROMA_PATH, embedding_function=get_embedding_function()
@@ -54,7 +121,7 @@ def add_to_chroma(chunks: list[Document]):
     # Add or Update the documents.
     existing_items = db.get(include=[])  # IDs are always included by default
     existing_ids = set(existing_items["ids"])
-    print(f"Number of existing documents in DB: {len(existing_ids)}")
+    logger.info(f"Number of existing documents in DB: {len(existing_ids)}")
 
     # Only add documents that don't exist in the DB.
     new_chunks = []
@@ -63,17 +130,28 @@ def add_to_chroma(chunks: list[Document]):
             new_chunks.append(chunk)
 
     if len(new_chunks):
-        print(f"👉 Adding new documents: {len(new_chunks)}")
+        logger.info(f"Adding new documents: {len(new_chunks)}")
         new_chunk_ids = [chunk.metadata["id"] for chunk in new_chunks]
         db.add_documents(new_chunks, ids=new_chunk_ids)
     else:
-        print("✅ No new documents to add")
+        logger.info("No new documents to add")
 
 
-def calculate_chunk_ids(chunks):
-
-    # This will create IDs like "data/monopoly.pdf:6:2"
-    # Page Source : Page Number : Chunk Index
+def calculate_chunk_ids(chunks: List[Document]) -> List[Document]:
+    """
+    Generates unique chunk IDs for each document chunk in the list.
+    
+    The IDs are formatted as follows:
+    "data/{document_name}:page_number:chunk_index"
+    
+    Args:
+        chunks (List[Document]): A list of Document objects representing the chunks to which IDs will be assigned.
+            - Each Document object should contain information like its source file name and page number.
+    
+    Returns:
+        List[Document]: A list of Document objects with updated IDs assigned to each chunk.
+            - Each Document will now include an 'id' field or attribute with a unique chunk identifier.
+    """
 
     last_page_id = None
     current_chunk_index = 0
@@ -99,6 +177,12 @@ def calculate_chunk_ids(chunks):
     return chunks
 
 
-def clear_database():
+def clear_database() -> None:
+    """
+    Clears the existing Chroma database.
+    
+    Returns:
+        None
+    """
     if os.path.exists(CHROMA_PATH):
         shutil.rmtree(CHROMA_PATH)
