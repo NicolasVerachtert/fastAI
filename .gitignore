@@ -3,8 +3,17 @@
 .venv
 .env
 data/chroma/*
+data/docs/*
+app.log
 
 
 # Byte-compiled / optimized / DLL files
 __pycache__/*
 *.py[cod]
+
+
+# Secrets
+credentials.json
+
+
+
