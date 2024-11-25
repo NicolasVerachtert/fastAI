@@ -1,5 +1,5 @@
 import logging
-from schema.llm_dto import LLMQueryDTO, LLMResponseDTO
+from schema.llm_dto import LLMQueryDTO, LLMResponseDTO, SupportedLanguage
 from .models import ModelQueryService
 from .context import RAGPromptService
 
@@ -27,7 +27,18 @@ class RAGModelQueryService:
         try:
             # Use the RAG service to create the prompt
             prompt = self.rag_prompt_service.create_prompt(request)
-
+            
+            if prompt is None:
+                return LLMResponseDTO(
+                    query_id=request.query_id,
+                    successful=False,
+                    query_response=( 
+                        "Helaas beschik ik niet over de nodige informatie om op je vraag te antwoorden. Contacteer de developers van de game."
+                        if request.query_lang == SupportedLanguage.nl else
+                        "Unfortunately I don't posses the necessary information to answer your question. Please contact the devs."
+                    )
+                )
+            
             # Use the ModelQueryService to query the model with the prompt
             response = self.model_query_service.query(prompt)
 

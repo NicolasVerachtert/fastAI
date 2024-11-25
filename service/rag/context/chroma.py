@@ -8,6 +8,7 @@ import shutil
 import logging
 from config import CHROMA_PATH, DOCS_PATH
 from typing import List
+import re
 
 logger = logging.getLogger("app")
 
@@ -44,9 +45,19 @@ def load_documents() -> List[Document]:
         for file_name in os.listdir(DOCS_PATH):
             file_path = os.path.join(DOCS_PATH, file_name)
             if file_name.endswith('.pdf'):
-                documents.extend(load_from_pdf(file_path))
-            elif file_name.endswith('.txt'):
-                documents.extend(load_from_txt(file_path))
+                loaded_docs = load_from_pdf(file_path)
+            elif file_name.endswith('.txt') or file_name.endswith('.md'):
+                loaded_docs = load_from_txt(file_path)
+            else:
+                continue
+
+            for doc in loaded_docs:
+                game_mode, language = extract_metadata_from_filename(file_name)
+                doc.metadata["game_mode"] = game_mode
+                doc.metadata["language"] = language
+
+            documents.extend(loaded_docs)
+            
     except FileNotFoundError as e:
         logger.error(f"Documents directory not found: {e}")
     except Exception as e:
@@ -91,6 +102,28 @@ def load_from_txt(file_path: str) -> List[Document]:
     except RuntimeError as e:
         logger.error(f"Error loading TXT file {file_path}: {e}")
         return []
+
+
+def extract_metadata_from_filename(file_name: str) -> tuple:
+    """
+    Extracts game_mode and language from the filename in the format `name_game_mode_language.ext`,
+    where `ext` can be any file extension.
+
+    Args:
+        file_name (str): The name of the file.
+
+    Returns:
+        tuple: A tuple (game_mode, language).
+    """
+    # Regular expression to match the filename pattern: name_game_mode_language.ext (with any extension)
+    match = re.match(r".*_(.*?)_(.*?)\.(\w+)$", file_name)
+    if match:
+        game_mode = match.group(1)  # Extract the game_mode
+        language = match.group(2)   # Extract the language
+        return game_mode, language
+    else:
+        logger.warning(f"Filename {file_name} does not match the expected format.")
+        return "unknown", "unknown"  # Return default values if the format doesn't match
 
 
 def split_documents(documents: List[Document]) -> list[Document]:
