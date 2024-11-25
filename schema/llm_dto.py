@@ -5,12 +5,17 @@ from enum import Enum
 class SupportedLanguage(str, Enum):
     nl = 'nederlands'
     en = 'english'
+    
+class SupportedGameMode(str, Enum):
+    classic = 'classic'
+    belgium = 'belgium'
 
 
 class LLMQueryDTO(BaseModel):
     query_id: UUID
     query_text: str
     query_lang: SupportedLanguage
+    query_game_mode: SupportedGameMode
     
     
 class LLMResponseDTO(BaseModel):
