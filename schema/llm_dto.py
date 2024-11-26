@@ -12,13 +12,13 @@ class SupportedGameMode(str, Enum):
 
 
 class LLMQueryDTO(BaseModel):
-    query_id: UUID
-    query_text: str
-    query_lang: SupportedLanguage
-    query_game_mode: SupportedGameMode
+    session_id: UUID
+    question: str
+    language: SupportedLanguage
+    game_mode: SupportedGameMode
     
     
 class LLMResponseDTO(BaseModel):
-    query_id: UUID
+    session_id: UUID
     successful: bool
-    query_response: str
+    llm_response: str

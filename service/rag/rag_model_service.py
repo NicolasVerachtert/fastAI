@@ -1,7 +1,10 @@
 import logging
+
+from repository import save_chat_history
 from schema.llm_dto import LLMQueryDTO, LLMResponseDTO, SupportedLanguage
 from .models import ModelQueryService
 from .context import RAGPromptService
+from repository import save_chat_history, get_chat_history
 
 
 logger = logging.getLogger("app")
@@ -25,16 +28,20 @@ class RAGModelQueryService:
         :return: LLMResponseDTO with the model's response or error.
         """
         try:
+            
+            history = get_chat_history(request.session_id)
+            
+            
             # Use the RAG service to create the prompt
-            prompt = self.rag_prompt_service.create_prompt(request)
+            prompt = self.rag_prompt_service.create_prompt(request, history)
             
             if prompt is None:
                 return LLMResponseDTO(
-                    query_id=request.query_id,
+                    session_id=request.session_id,
                     successful=False,
-                    query_response=( 
+                    llm_response=( 
                         "Helaas beschik ik niet over de nodige informatie om op je vraag te antwoorden. Contacteer de developers van de game."
-                        if request.query_lang == SupportedLanguage.nl else
+                        if request.language == SupportedLanguage.nl else
                         "Unfortunately I don't posses the necessary information to answer your question. Please contact the devs."
                     )
                 )
@@ -45,16 +52,18 @@ class RAGModelQueryService:
             if response is None:
                 raise RuntimeError("All models failed to respond.")
 
+            save_chat_history(request.session_id, request.question, response)
+
             return LLMResponseDTO(
-                query_id=request.query_id,
+                session_id=request.session_id,
                 successful=True,
-                query_response=response
+                llm_response=response
             )
 
         except Exception as e:
             logger.error(f"Error processing query: {e}")
             return LLMResponseDTO(
-                query_id=request.query_id,
+                session_id=request.session_id,
                 successful=False,
-                query_response=("An unexpected error occurred." if request.query_lang == "en" else "Er is iets misgegaan. Contacteer de developers.")
+                llm_response=("An unexpected error occurred." if request.language == "en" else "Er is iets misgegaan. Contacteer de developers.")
             )

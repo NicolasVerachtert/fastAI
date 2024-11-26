@@ -4,6 +4,7 @@
 .env
 data/chroma/*
 data/docs/*
+data/chat_history.db
 app.log
 
 
