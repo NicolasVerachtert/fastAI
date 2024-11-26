@@ -2,15 +2,18 @@ import uvicorn
 from fastapi import FastAPI
 from api import chatbot
 from config import UVICORN_PORT, UVICORN_HOST, setup_logging, LOGGING_CONFIG
+from db import init_db
 
 
 def setup_app() -> None:
     """Setup FastAPI app"""
+    
     setup_logging()
 
 
 if __name__ == "__main__":
     setup_app()
+    init_db()
 
     app = FastAPI()
     app.include_router(chatbot.router)
