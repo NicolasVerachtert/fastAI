@@ -9,7 +9,7 @@ router = APIRouter()
 
 rag_query_service = RAGModelQueryService()
 
-@router.post("/chatbot/", response_model=LLMResponseDTO)
+@router.post("/chatbot", response_model=LLMResponseDTO)
 async def query_llm(query: LLMQueryDTO) -> LLMResponseDTO:
     """
     Endpoint to query the language model.
