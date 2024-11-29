@@ -1,8 +1,12 @@
 from dotenv import load_dotenv
 import os
+import base64
 
 # Load environment variables from a .env file
 load_dotenv()
+
+# Required
+GOOGLE_SERVICE_ACCOUNT_CRED_B64 = os.getenv("GOOGLE_SERVICE_ACCOUNT_CRED_B64")
 
 # Application configuration
 DATA_PATH = os.getenv("DATA_FOLDER", "data")
@@ -22,7 +26,6 @@ CHROMA_RESET = bool(os.getenv("CRHOMA_RESET", "false"))
 # Google Cloud configuration
 GOOGLE_PROJECT_ID = os.getenv("GOOGLE_PROJECT_ID", "integratieproject-2-442110")
 GOOGLE_GEMINI_KEY_ID = os.getenv("GOOGLE_GEMINI_KEY_ID", "GEMINI_API_KEY")
-GOOGLE_SERVICE_ACCOUNT_CRED_PATH = os.getenv("GOOGLE_SERVICE_ACCOUNT_CRED_PATH", "credentials.json")
 GCS_BUCKET_NAME=os.getenv("GCS_BUCKET_NAME", "team-20-monopoly-ip2-media-bucket")
 GCS_DOCS_PATH = os.getenv("GCS_DOCS_PATH", "monopoly-user-guides")
 

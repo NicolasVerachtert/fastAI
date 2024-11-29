@@ -1,8 +1,10 @@
 from google.cloud import storage
 
-from config import GOOGLE_SERVICE_ACCOUNT_CRED_PATH, GCS_BUCKET_NAME, GCS_DOCS_PATH, DOCS_PATH
+from config import GOOGLE_SERVICE_ACCOUNT_CRED_B64, GCS_BUCKET_NAME, GCS_DOCS_PATH, DOCS_PATH
 import logging
 import os
+import json
+from base64 import b64decode
 
 
 logger = logging.getLogger("app")
@@ -10,7 +12,7 @@ logger = logging.getLogger("app")
 
 def validate_config():
     """Validates required configurations."""
-    if not GOOGLE_SERVICE_ACCOUNT_CRED_PATH:
+    if not GOOGLE_SERVICE_ACCOUNT_CRED_B64:
         logger.error("Google service account credential path is not configured.")
         raise ValueError("GOOGLE_SERVICE_ACCOUNT_CRED_PATH is not configured.")
     if not GCS_BUCKET_NAME:
@@ -27,8 +29,11 @@ def validate_config():
 def initialize_gcs_client() -> storage.Client:
     """Initializes and returns the Google Cloud Storage client."""
     try:
-        client = storage.Client.from_service_account_json(GOOGLE_SERVICE_ACCOUNT_CRED_PATH)
+
+        creds = json.loads(b64decode(GOOGLE_SERVICE_ACCOUNT_CRED_B64))
+        client = storage.Client.from_service_account_info(creds)
         logger.info("Successfully initialized Google Cloud Storage client.")
+        
         return client
     except Exception as e:
         logger.error(f"Failed to initialize GCS client: {e}")
