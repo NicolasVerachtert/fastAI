@@ -14,7 +14,6 @@ build-publish-app:
   services:
     - docker:dind
   script:
-    - echo $GOOGLE_SERVICE_ACCOUNT > credentials.json
     - docker build -t $CI_REGISTRY_IMAGE:$TAG .
     - docker tag $CI_REGISTRY_IMAGE:$TAG $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:$TAG

@@ -3,10 +3,11 @@ from google.cloud.secretmanager_v1beta2 import SecretManagerServiceClient
 from google.api_core.exceptions import NotFound, PermissionDenied, GoogleAPIError
 from google.auth.credentials import Credentials
 
-from config import GOOGLE_PROJECT_ID, GOOGLE_GEMINI_KEY_ID, GOOGLE_SERVICE_ACCOUNT_CRED_PATH, MISTRAL_KEY_ID
+from config import GOOGLE_PROJECT_ID, GOOGLE_GEMINI_KEY_ID, GOOGLE_SERVICE_ACCOUNT_CRED_B64, MISTRAL_KEY_ID
 from google.oauth2 import service_account
 import logging
-from typing import Any
+from base64 import b64decode
+import json
 
 
 logger = logging.getLogger("app")
@@ -14,12 +15,12 @@ logger = logging.getLogger("app")
 def load_credentials() -> Credentials:
     """Load credentials from the service account key file."""
     try:
-        if not GOOGLE_SERVICE_ACCOUNT_CRED_PATH:
+        if not GOOGLE_SERVICE_ACCOUNT_CRED_B64:
             raise ValueError("Service account credentials path is not configured.")
+        
+        creds = json.loads(b64decode(GOOGLE_SERVICE_ACCOUNT_CRED_B64))
 
-        g_credentials = service_account.Credentials.from_service_account_file(
-            GOOGLE_SERVICE_ACCOUNT_CRED_PATH
-        )
+        g_credentials = service_account.Credentials.from_service_account_info(creds)
         logger.info("Successfully loaded service account credentials.")
         return g_credentials
     except FileNotFoundError as e:
