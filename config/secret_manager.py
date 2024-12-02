@@ -3,7 +3,7 @@ from google.cloud.secretmanager_v1beta2 import SecretManagerServiceClient
 from google.api_core.exceptions import NotFound, PermissionDenied, GoogleAPIError
 from google.auth.credentials import Credentials
 
-from config import GOOGLE_PROJECT_ID, GOOGLE_GEMINI_KEY_ID, GOOGLE_SERVICE_ACCOUNT_CRED_B64, MISTRAL_KEY_ID
+from config import GOOGLE_PROJECT_ID, GEMINI_KEY_ID, GOOGLE_SERVICE_ACCOUNT_CRED_B64, MISTRAL_KEY_ID
 from google.oauth2 import service_account
 import logging
 from base64 import b64decode
@@ -96,7 +96,7 @@ def get_secret(g_client, secret_id, version="latest"):
 try:
     credentials = load_credentials()
     client = initialize_secret_manager_client(credentials)
-    GEMINI_KEY = get_secret(client, GOOGLE_GEMINI_KEY_ID)
+    GEMINI_KEY = get_secret(client, GEMINI_KEY_ID)
     MISTRAL_KEY = get_secret(client, MISTRAL_KEY_ID)
     logger.info("Successfully retrieved API keys.")
 except Exception as ex:

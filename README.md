@@ -1,93 +1,182 @@
-# Backend AI Service
+# FastAPI RAG-Based Chatbot API
+
+This project provides a **FastAPI-based API** that delivers responses using a Retrieval-Augmented Generation (RAG) system powered by Large Language Models (LLMs). The system combines document-based context and conversational history to deliver highly relevant responses.
+
+---
+
+## Features
+
+### Endpoints Overview
+- **`/chatbot`**: Accepts a query and returns a response from the LLM enriched with relevant document context and session history.
+  - LLMQueryDto:
+    ```json
+    {
+    "session_id": "string (uuid)",
+    "question": "string",
+    "language": "string (allowed: 'nederlands', 'english')",
+    "game_mode": "string (allowed: 'classic', 'belgium')"
+    }
+    ```
+- **Standard FastAPI Endpoints**:
+    - `/docs`: Swagger UI for interactive API exploration.
+    - `/redoc`: API documentation in ReDoc format.
+    - `/health`: A simple health check endpoint.
+
+### Retrieval-Augmented Generation (RAG) System
+- **Vector Database**:
+    - Uses **Chroma** to store vectorized document chunks.
+    - Saves the vector database as an `.sqlite` file for persistence.
+- **Document Management**:
+    - Documents are uploaded to a Google Cloud Storage bucket using the format:
+      ```
+      'name'_'game mode'_'language'.'extension;
+      ```
+    - Supported game modes: `classic`, `belgium`.
+    - Supported languages: `en`, `nl`.
+    - Supported formats/extensions: `.txt`, `.md`, `.pdf`.
+    - On container startup, documents are automatically pulled from the bucket and processed.
+- **Embeddings**:
+    - Embeddings are generated using **Google Generative AI Embeddings** and stored in the Chroma database.
+- **Context Filtering**:
+    - RAG searches the ChromaDB for the **top 5 contexts**, filtered by the relevant language and game mode.
+
+### Large Language Model (LLM) Integration
+The application's LLM integration is powered by the **Langchain** package, which provides a flexible and extensible framework for working with large language models. 
+Langchain allows seamless interaction with multiple LLMs, including **Gemini** and **Mistral**, and enables advanced functionality such as chaining models and integrating them with other services like embeddings and retrieval-augmented generation (RAG).
+- **Primary Model**: **Gemini LLM**.
+- **Fallback Model**: **Mistral**.
+- Responses are tailored to the **language** specified in the query object (`nl` or `en`).
+
+### Session Management
+- Previous questions and answers in the same session are saved to an SQLite database using **SQLAlchemy**.
+- For new queries, the system includes prior session history as additional context alongside the RAG results.
+
+### Logging
+- Logs are written to `app.log`:
+    - Includes FastAPI application logs and query logs for debugging and monitoring.
+
+---
+
+## Model Customization
+
+Currently, the application uses **Gemini** and **Mistral** as the primary LLMs. However, the system is designed to be easily extendable, and you can add additional models as follows:
+
+1. **Extend the model**: To add a new LLM, create a new object by extending the `BaseChatModel` class from Langchain. See [Langchain chat models](https://python.langchain.com/docs/integrations/chat/).
+
+2. **Register the new model**: In the `model_registry.py` file located in `service/rag/models`, you can register the new model. Use the `register_model()` function, specifying the model's priority and the new model object.
+
+### API Key Management for Models
+
+If the new model requires API keys, it is recommended to securely manage them using **Google Cloud Secret Manager**. Here’s how you can configure it:
+
+1. **Store API Keys**: Add the model's API keys to **Google Cloud Secret Manager**.
+2. **Configure Key ID**: Declare the key names in the **`config/environment.py`** file. For example:
+   ```python
+   LLM_KEY_ID = os.getenv("LLM_KEY_ID", "LLM_API_KEY")
+   ```
+3. **Import in Secret Manager**: In the `config/secret_manager.py` file, ensure that the appropriate API key ID is imported, and the secret is fetched securely using the Google Cloud Secret Manager API.
+
+This setup allows you to extend the system with additional models while ensuring that sensitive information (such as API keys) is stored securely and retrieved dynamically.
+
+---
+
+## Environment Configuration
+
+### Required Environment Variables
+The following variables should be set for the application to run:
+- **`CREDENTIALS_JSON`**: Path to the Google Cloud service account credentials file.
+
+### Google Cloud Secret Manager
+The application will retrieve the API keys for **Mistral** and **Gemini** from **Google Cloud Secret Manager**. You must ensure that the API keys are stored in Secret Manager under the following secret names:
+
+- **`MISTRAL_API_KEY`**: The secret name in Google Cloud Secret Manager for the Mistral LLM API key.
+- **`GEMINI_API_KEY`**: The secret name in Google Cloud Secret Manager for the Gemini LLM API key.
+
+The application will automatically fetch these keys from Secret Manager using the names specified above when running.
+By default, the application expects these specific secret names. However, if you wish to use different names for the secrets in Google Cloud Secret Manager, you can do so. 
+In that case, you must provide the new secret name as an environment variable:
+
+- **`MISTRAL_KEY_ID`**: The name of the secret in Google Cloud Secret Manager for the Mistral API key, if it differs from the default `MISTRAL_API_KEY`.
+- **`GEMINI_KEY_ID`**: The name of the secret in Google Cloud Secret Manager for the Gemini API key, if it differs from the default `GEMINI_API_KEY`.
+
+### Google Cloud Storage Bucket
+
+The Google Cloud Storage (GCS) bucket and document path configurations are set in the `.env` file:
+
+- **`GCS_BUCKET_NAME`**: The name of the GCS bucket where the documents are stored. The default value is:
+  ```plaintext
+  team-20-monopoly-ip2-media-bucket
+  ```
+- **`GCS_DOCS_PATH`**: The specific path within the GCS bucket where the documents are located. The default value is:
+  ```plaintext
+  monopoly-user-guides
+  ```
+
+### Optional Configuration via Environment Variables
+
+The application allows further customization through additional environment variables. These variables are optional and can be configured to suit your specific use case:
+
+- **`DATA_FOLDER`**: Path to the data directory. Default is `data`.
+- **`UVICORN_PORT`**: The port number for the Uvicorn server. Default is `5000`.
+- **`UVICORN_HOST`**: The host address for the Uvicorn server. Default is `0.0.0.0`.
+- **`CHROMA_RESET`**: Whether to reset the Chroma database on startup. Default is `false`.
+
+### Google Cloud Configuration
+
+- **`GOOGLE_PROJECT_ID`**: The Google Cloud project ID. Default is `integratieproject-2-442110`.
+- **`GOOGLE_SERVICE_ACCOUNT_CRED_PATH`**: Path to the service account credentials file (`credentials.json`). Default is `credentials.json`.
+- **`GCS_BUCKET_NAME`**: The name of the Google Cloud Storage bucket. Default is `team-20-monopoly-ip2-media-bucket`.
+- **`GCS_DOCS_PATH`**: The path to the documents within the GCS bucket. Default is `monopoly-user-guides`.
+
+### AI Model Configuration
+
+- **Gemini AI**:
+    - **`GEMINI_EMBEDDING_MODEL`**: The model used for embedding generation in Gemini. Default is `models/embedding-001`.
+    - **`GEMINI_LLM_MODEL`**: The model used for generating responses with Gemini. Default is `gemini-1.5-flash-latest`.
+    - **`GEMINI_KEY_ID`**: The ID of the secret in Google Cloud Secret Manager for the Gemini API key. Default is `GEMINI_API_KEY`.
+
+- **Mistral AI**:
+    - **`MISTRAL_KEY_ID`**: The ID of the secret in Google Cloud Secret Manager for the Mistral API key. Default is `MISTRAL_API_KEY`.
+    - **`MISTRAL_LLM_MODEL`**: The model used for generating responses with Mistral. Default is `open-mistral-7b`.
+
+These configuration options provide flexibility to customize paths, server settings, Google Cloud integration, and AI models according to your needs.
+
+---
+
+## Deployment
+
+### Dockerized Application
+- The project is compiled into a Docker image for seamless deployment.
+- On container startup:
+    1. Documents are pulled from the Google Cloud Storage bucket.
+    2. Embeddings are generated and stored in the ChromaDB.
+    3. The FastAPI application is started using **Uvicorn**, an ASGI server, to serve API requests.
+
+---
+
+## Usage Instructions
+
+1. **Set Environment Variables**:
+   Ensure the required environment variables are set before running the container.
+
+2. **Run the Docker Container**:
+   Start the container to initialize the application and load documents.
+
+3. **Use the API**:
+    - Send requests to `/chatbot` with the desired query and language settings.
+
+---
+
+## Limitations and Future Improvements
+
+### Language Support
+Currently, no additional languages are planned beyond **Dutch (nl)** and **English (en)**. The fallback mechanism uses the standard LLM parser when no relevant context is found in the vector database. However, please note that this fallback may result in reduced performance, as the embeddings are language-sensitive and are specifically generated for supported languages.
 
 
-
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/kdg-ti/integratieproject-2/2024-2025/team20/backend-ai-service.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.com/kdg-ti/integratieproject-2/2024-2025/team20/backend-ai-service/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+---
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Please open issues or submit pull requests to contribute to this project. For questions or improvements, reach out to the repository maintainers.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+---
