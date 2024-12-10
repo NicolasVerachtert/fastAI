@@ -1,16 +1,33 @@
-variables: 
+variables:
   DOCKER_TLS_CERTDIR: "/certs"
   TAG: $CI_COMMIT_SHORT_SHA
-  
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+  GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+
 stages:
+  - check
+  - test
   - build-publish
 
-before_script:
-  - echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+sonarqube-check:
+  stage: check
+  image:
+    name: sonarsource/sonar-scanner-cli:11
+    entrypoint: [ "" ]
+  allow_failure: true
+  script:
+    - sonar-scanner -Dsonar.host.url="${SONAR_HOST_URL}"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'main'
+    - if: $CI_COMMIT_BRANCH == 'develop'
 
 build-publish-app:
   stage: build-publish
   image: docker:latest
+  before_script:
+    - echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
   services:
     - docker:dind
   script:
@@ -18,5 +35,5 @@ build-publish-app:
     - docker tag $CI_REGISTRY_IMAGE:$TAG $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:$TAG
     - docker push $CI_REGISTRY_IMAGE:latest
-  only:
-    - main
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
