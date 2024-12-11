@@ -3,8 +3,8 @@ variables:
   TAG: $CI_COMMIT_SHORT_SHA
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
-  IMAGE_NAME: "$IMAGE_NAME/python-ai"
-  
+  IMAGE_NAME: "${CI_REGISTRY_IMAGE}/python-ai"
+
 stages:
   - check
   - test
