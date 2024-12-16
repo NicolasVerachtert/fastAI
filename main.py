@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from api import chatbot
+from api import chatbot, prediction
 from config import UVICORN_PORT, UVICORN_HOST, setup_logging, LOGGING_CONFIG
 from db import init_db
 
@@ -17,6 +17,7 @@ if __name__ == "__main__":
 
     app = FastAPI()
     app.include_router(chatbot.router)
+    app.include_router(prediction.router)
 
     uvicorn.run(
         app,
