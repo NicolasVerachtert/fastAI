@@ -1,8 +1,8 @@
 import logging
 
 from repository import save_chat_history
-from schema.llm_dto import LLMQueryDTO, LLMResponseDTO, SupportedLanguage
-from .models import ModelQueryService
+from schema import LLMQueryDTO, LLMResponseDTO, SupportedLanguage
+from .llm_models import ModelQueryService
 from .context import RAGPromptService
 from repository import save_chat_history, get_chat_history
 

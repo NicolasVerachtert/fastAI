@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from schema.llm_dto import LLMResponseDTO, LLMQueryDTO
+from schema import LLMResponseDTO, LLMQueryDTO
 from service import RAGModelQueryService
 import logging
 

@@ -15,8 +15,8 @@ UVICORN_PORT = int(os.getenv("UVICORN_PORT", 5000))
 UVICORN_HOST = os.getenv("UVICORN_HOST", "0.0.0.0")
 
 # Path configuration
-CHROMA_PATH = f"{DATA_PATH}/chroma"
-DOCS_PATH = f"{DATA_PATH}/docs"
+CHROMA_PATH = f"{DATA_PATH}{os.sep}chroma"
+DOCS_PATH = f"{DATA_PATH}{os.sep}docs"
 CHROMA_RESET = bool(os.getenv("CRHOMA_RESET", "false"))
 
 # Google Cloud configuration
@@ -33,3 +33,7 @@ GEMINI_KEY_ID = os.getenv("GOOGLE_GEMINI_KEY_ID", "GEMINI_API_KEY")
 # Mistral AI configuration
 MISTRAL_KEY_ID = os.getenv("MISTRAL_KEY_ID", "MISTRAL_API_KEY")
 MISTRAL_LLM_MODEL = os.getenv("MISTRAL_LLM_MODEL", "open-mistral-7b")
+
+# Artifacts for Prediction Model
+ARTIFACTS_PATH = os.getenv("ARTIFACTS_PATH", "artifacts")
+PREDICTION_ARTIFACTS_PATH = os.getenv("PREDICTION_ARTIFACTS_PATH", f"{ARTIFACTS_PATH}{os.sep}prediction_model")
