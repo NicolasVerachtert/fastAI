@@ -26,6 +26,7 @@ PROMPT_TEMPLATE = (
     ---
     
     Answer the question in {language} based on the above context: {question}.
+    Answer in regular text format. No formatting of any kind.
     """
 )
 
@@ -42,6 +43,7 @@ PROMPT_TEMPLATE_WITH_HISTORY = (
     ---
     
     Answer the question in {language} based on the above context: {question}.
+    Answer in regular text format. No formatting of any kind.
     """
 )
 
