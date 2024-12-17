@@ -19,6 +19,7 @@ if __name__ == "__main__":
     app.include_router(chatbot.router)
     app.include_router(prediction.router)
 
+
     uvicorn.run(
         app,
         host=UVICORN_HOST,
