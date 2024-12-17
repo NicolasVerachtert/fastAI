@@ -2,8 +2,9 @@ import logging
 
 from fastapi import APIRouter, HTTPException, status
 
-from schema import PredictionDTO, BoardGameDTO
+from schema import PredictionDTO, BoardGameDTO, Mechanic, Domain
 from service import PredictionModelService
+from typing import List
 
 logger = logging.getLogger("app")
 
@@ -11,7 +12,7 @@ router = APIRouter()
 
 prediction_model_service = PredictionModelService()
 
-@router.post("/predict", response_model=PredictionDTO)
+@router.post("/prediction", response_model=PredictionDTO)
 async def predict(board_game_dto: BoardGameDTO) -> PredictionDTO:
     """
     Endpoint to query the prediction model.
@@ -36,3 +37,14 @@ async def predict(board_game_dto: BoardGameDTO) -> PredictionDTO:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An unexpected error occurred while processing your request.",
         )
+
+
+@router.get("/prediction/available-mechanic", response_model=List[str])
+async def get_all_available_mechanics() -> List[str]:
+    return [item for item in Mechanic]
+
+
+@router.get("/prediction/available-domain", response_model=List[str])
+async def get_all_available_domains() -> List[str]:
+    return [item for item in Domain]
+
