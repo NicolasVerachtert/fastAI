@@ -1,0 +1,484 @@
+@url=http://localhost:8000
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "dc669ed1-5978-4968-84e4-fa9ef7613d33",
+  "question": "What happens when I land on a property someone else owns?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "b53acd53-6d6a-437b-8565-089e0077594e",
+  "question": "How much do I collect when I pass Go?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "40925a90-aff5-418c-893c-0fab9aae1988",
+  "question": "What do I do if I land on 'Go to Jail'?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "3d83b8e7-42d0-41ec-b4a1-b51a6c164d14",
+  "question": "Can I buy a property on my first turn?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "a572229e-3ca1-49cd-b9b5-d5cd0572989d",
+  "question": "What are the rules for building houses and hotels?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "ce192f18-8c0a-4434-b20b-52757e1cff52",
+  "question": "What happens if I land on Free Parking?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "bb35282e-a6fa-41de-b4c2-fc75f7a6ced7",
+  "question": "Can I sell a property back to the bank?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+
+### TODO Check reasoning
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "f31ee614-1562-4bc0-9fdf-2adcdcd36c38",
+  "question": "Is there a limit to the number of houses I can build?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "3de6c986-1feb-4fdf-ae5a-090d6ee60e98",
+  "question": "What happens when I mortgage a property?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "fb14f48d-76b8-4c66-a792-ac4c0cbd5050",
+  "question": "How do I pay off a mortgage?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "d5a268fb-57ee-4b11-85b0-53bf09ce5000",
+  "question": "Can two players trade properties that are mortgaged?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "332c158e-1702-4973-b019-b4cb62007490",
+  "question": "What happens if I owe more money than I have?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "8dab32d6-1fc6-468c-a12b-8ad2b7cf1d31",
+  "question": "Can I choose not to buy a property I land on?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "38dc7e58-365d-422d-9d0d-b14841d086ae",
+  "question": "What happens if the bank runs out of houses?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "667a19bb-8cc8-487d-bec9-5d3c7ef32984",
+  "question": "If I’m in jail, can I collect rent from my properties?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "c5d5a8cb-79dc-4a42-9116-01247c2731a4",
+  "question": "Can I play Monopoly backwards, starting from the 'Boardwalk' corner?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "993fdcdd-0035-4ca9-ac22-25377cff55a5",
+  "question": "What happens if two players roll the same number three times in a row?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "e585894e-2d7d-4871-b8fa-afb66e6f4f89",
+  "question": "Is it against the rules to make a secret alliance with another player?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "42e418b1-7cd0-4721-b9b1-9243c05ac961",
+  "question": "Can I use Monopoly money to pay for snacks during the game?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "3260775a-ecce-4e01-b632-cb54f21fe30e",
+  "question": "If the game board is flipped over by accident, how do we determine where everyone's pieces were?",
+  "language": "english",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "ea6b771b-0103-47eb-8f2d-667229bddced",
+  "question": "Wat gebeurt er als ik op een eigendom van iemand anders land?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "e0252243-9677-42d3-bc1e-4ead484472e4",
+  "question": "Hoeveel krijg ik als ik langs 'Start' kom?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "2f5f6b54-18e6-44ad-aa66-51cb2acc4406",
+  "question": "Wat moet ik doen als ik op 'Ga naar de Gevangenis' land?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "2e88055e-5473-419c-95e6-b1f8831b1954",
+  "question": "Kan ik een eigendom kopen bij mijn eerste beurt?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "da3dbd5a-c631-465b-ba3e-7e11c199edaf",
+  "question": "Wat zijn de regels voor het bouwen van huizen en hotels?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "cc4672d2-d431-4911-a3d3-54c1d992f168",
+  "question": "Wat gebeurt er als ik op 'Gratis Parkeren' land?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "a2919193-c584-4a25-9258-c543363ac2a4",
+  "question": "Kan ik een eigendom terug aan de bank verkopen?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "fc80bae1-5d40-4794-8279-6621332175d3",
+  "question": "Is er een limiet aan het aantal huizen dat ik kan bouwen?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "b701a3ee-cf4a-4b6b-a8b6-cb9d0b798899",
+  "question": "Wat gebeurt er als ik een eigendom hypotheek?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "58a0c81a-e2ba-4ef1-a1ff-44e894317ddc",
+  "question": "Hoe los ik een hypotheek af?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "07551d4c-556f-4174-a57e-a012afee2fa7",
+  "question": "Kunnen twee spelers eigendommen verhandelen die gemortgageerd zijn?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "c9e81c2c-55c5-4a64-825c-f28fa00d601e",
+  "question": "Wat gebeurt er als ik meer geld verschuldigd ben dan ik heb?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "391d4c58-ac26-4e70-8eb4-8e63ab3e9c0e",
+  "question": "Kan ik ervoor kiezen een eigendom dat ik land niet te kopen?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "691d8518-cad9-46d0-98d5-52b23a5c1721",
+  "question": "Wat gebeurt er als de bank geen huizen meer heeft?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "058eb661-1db4-4fdf-87ca-c34c8b5de91b",
+  "question": "Als ik in de gevangenis ben, kan ik dan huur innen van mijn eigendommen?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "681171e2-ac27-4d69-8d0f-bdd10cdec627",
+  "question": "Kan ik Monopoly achteruit spelen, beginnend bij de 'Boardwalk' hoek?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "3e97ff1e-b2fc-4834-8455-373f722f7c42",
+  "question": "Wat gebeurt er als twee spelers drie keer achter elkaar hetzelfde getal gooien?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "541842a3-c972-4c6e-90f2-2e331203c672",
+  "question": "Is het tegen de regels om een geheime alliantie met een andere speler te maken?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "1759ccb5-2302-478e-af88-c022c18e585c",
+  "question": "Kan ik Monopoly geld gebruiken om snacks te betalen tijdens het spel?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
+###
+
+POST {{url}}/chatbot
+Content-Type: application/json
+
+{
+  "session_id": "1a0d1fb1-9be5-40c9-8aa0-cc6326d8d518",
+  "question": "Als het bord per ongeluk omgedraaid wordt, hoe bepalen we waar ieders pionnen waren?",
+  "language": "nederlands",
+  "game_mode": "classic"
+}
+
