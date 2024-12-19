@@ -1,6 +1,7 @@
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator, validator, field_validator
+
 
 class PredictionDTO(BaseModel):
     average_complexity: float = Field(..., ge=0, le=5)
@@ -208,8 +209,15 @@ class Mechanic(str, Enum):
 class BoardGameDTO(BaseModel):
     year_published: int = Field(..., ge=-3600, lt=2030)
     min_players: int = Field(..., ge=1, le=8)
-    max_players: int = Field(..., g2=1, le=100)
+    max_players: int = Field(..., ge=1, le=100)
     play_time: int = Field(..., gt=0, lt=660)
     min_age: int = Field(..., ge=2, le=21)
     mechanics: list[Mechanic]
     domains: list[Domain]
+
+    @field_validator("max_players", mode="before")
+    def validate_max_players(cls, max_players, info):
+        min_players = info.data.get("min_players")  # Access `min_players` from the model's context
+        if min_players is not None and max_players < min_players:
+            raise ValueError("max_players must be greater than or equal to min_players")
+        return max_players
