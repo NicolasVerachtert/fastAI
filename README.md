@@ -4,10 +4,9 @@ This project provides a **FastAPI-based API** that delivers responses using a Re
 
 ---
 
-## Features
+## Endpoints
 
-### Endpoints Overview
-- **`/chatbot`**: Accepts a query and returns a response from the LLM enriched with relevant document context and session history.
+- POST **`/chatbot`**: Accepts a query and returns a response from the LLM enriched with relevant document context and session history.
   - LLMQueryDto:
     ```json
     {
@@ -17,12 +16,31 @@ This project provides a **FastAPI-based API** that delivers responses using a Re
     "game_mode": "string (allowed: 'classic', 'belgium')"
     }
     ```
+- POST **`/prediction`**: Accepts the features from a boardgame and returns a prediction on popularity_score, average_rating, average_complexity
+  - BoardGameDto:
+    ```json
+    {
+     "year_published": "int",
+     "min_players": "int",
+     "max_players": "int",
+     "play_time": "int",
+     "min_age": "int",
+     "mechanics": "list[str]",
+     "domains": "list[str]"
+    }
+    ```
+- GET **`/prediction/available-mechanic`**: Returns a list[str] which defines the available and accepted mechanics of the boardgame for the model
+- GET **`/prediction/available-domain`**: Returns a list[str] which defines the available and accepted domains of the boardgame for the model
 - **Standard FastAPI Endpoints**:
     - `/docs`: Swagger UI for interactive API exploration.
     - `/redoc`: API documentation in ReDoc format.
     - `/health`: A simple health check endpoint.
 
-### Retrieval-Augmented Generation (RAG) System
+---
+
+## Retrieval-Augmented Generation (RAG) System
+### RAG App
+#### Features
 - **Vector Database**:
     - Uses **Chroma** to store vectorized document chunks.
     - Saves the vector database as an `.sqlite` file for persistence.
@@ -40,24 +58,22 @@ This project provides a **FastAPI-based API** that delivers responses using a Re
 - **Context Filtering**:
     - RAG searches the ChromaDB for the **top 5 contexts**, filtered by the relevant language and game mode.
 
-### Large Language Model (LLM) Integration
+#### Large Language Model (LLM) Integration
 The application's LLM integration is powered by the **Langchain** package, which provides a flexible and extensible framework for working with large language models. 
 Langchain allows seamless interaction with multiple LLMs, including **Gemini** and **Mistral**, and enables advanced functionality such as chaining models and integrating them with other services like embeddings and retrieval-augmented generation (RAG).
 - **Primary Model**: **Gemini LLM**.
 - **Fallback Model**: **Mistral**.
 - Responses are tailored to the **language** specified in the query object (`nl` or `en`).
 
-### Session Management
+#### Session Management
 - Previous questions and answers in the same session are saved to an SQLite database using **SQLAlchemy**.
 - For new queries, the system includes prior session history as additional context alongside the RAG results.
 
-### Logging
+#### Logging
 - Logs are written to `app.log`:
     - Includes FastAPI application logs and query logs for debugging and monitoring.
 
----
-
-## Model Customization
+### Model Customization
 
 Currently, the application uses **Gemini** and **Mistral** as the primary LLMs. However, the system is designed to be easily extendable, and you can add additional models as follows:
 
@@ -71,12 +87,19 @@ If the new model requires API keys, it is recommended to securely manage them us
 
 1. **Store API Keys**: Add the model's API keys to **Google Cloud Secret Manager**.
 2. **Configure Key ID**: Declare the key names in the **`config/environment.py`** file. For example:
-   ```python
-   LLM_KEY_ID = os.getenv("LLM_KEY_ID", "LLM_API_KEY")
-   ```
+   `LLM_KEY_ID = os.getenv("LLM_KEY_ID", "LLM_API_KEY")`
 3. **Import in Secret Manager**: In the `config/secret_manager.py` file, ensure that the appropriate API key ID is imported, and the secret is fetched securely using the Google Cloud Secret Manager API.
 
 This setup allows you to extend the system with additional models while ensuring that sensitive information (such as API keys) is stored securely and retrieved dynamically.
+
+---
+
+## Prediction Model
+
+### Features
+
+- A separate model has been trained for every feature that has to be predicted.
+- The training and accompanying research can be found in /research.
 
 ---
 
@@ -120,6 +143,9 @@ The application allows further customization through additional environment vari
 - **`UVICORN_PORT`**: The port number for the Uvicorn server. Default is `5000`.
 - **`UVICORN_HOST`**: The host address for the Uvicorn server. Default is `0.0.0.0`.
 - **`CHROMA_RESET`**: Whether to reset the Chroma database on startup. Default is `false`.
+- **`ARTIFACTS_PATH`**: Path to the artifacts directory. Default is `artifacts`.
+- **`PREDICTION_ARTIFACTS_PATH`**: Path to the prediction model artifacts. Default is `{ARTIFACTS_PATH}/prediction_model`.
+
 
 ### Google Cloud Configuration
 
@@ -162,8 +188,8 @@ These configuration options provide flexibility to customize paths, server setti
 2. **Run the Docker Container**:
    Start the container to initialize the application and load documents.
 
-3. **Use the API**:
-    - Send requests to `/chatbot` with the desired query and language settings.
+3. **Use the RESTful API**:
+    - Send requests to the API endpoints.
 
 ---
 
@@ -171,7 +197,6 @@ These configuration options provide flexibility to customize paths, server setti
 
 ### Language Support
 Currently, no additional languages are planned beyond **Dutch (nl)** and **English (en)**. The fallback mechanism uses the standard LLM parser when no relevant context is found in the vector database. However, please note that this fallback may result in reduced performance, as the embeddings are language-sensitive and are specifically generated for supported languages.
-
 
 ---
 
