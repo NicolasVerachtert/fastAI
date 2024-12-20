@@ -1,0 +1,155 @@
+@url=http://localhost:8000
+
+
+###
+
+POST {{url}}/prediction
+Content-Type: application/json
+
+{
+    "year_published": 1971,
+    "min_players": 2,
+    "max_players": 9,
+    "play_time": 31,
+    "min_age": 6,
+    "mechanics": ["Deck Bag and Pool Building", "Hand Management"],
+    "domains": ["Strategy Games", "Family Games"]
+}
+
+###
+
+POST {{url}}/prediction
+Content-Type: application/json
+
+{
+    "year_published": 1972,
+    "min_players": 3,
+    "max_players": 10,
+    "play_time": 32,
+    "min_age": 7,
+    "mechanics": ["Worker Placement", "Set Collection"],
+    "domains": ["Thematic Games", "Abstract Games"]
+}
+
+###
+
+POST {{url}}/prediction
+Content-Type: application/json
+
+{
+    "year_published": 1973,
+    "min_players": 4,
+    "max_players": 11,
+    "play_time": 33,
+    "min_age": 8,
+    "mechanics": ["Action Drafting", "Dice Rolling"],
+    "domains": ["Wargames", "Party Games"]
+}
+
+###
+
+POST {{url}}/prediction
+Content-Type: application/json
+
+{
+    "year_published": 1974,
+    "min_players": 5,
+    "max_players": 12,
+    "play_time": 34,
+    "min_age": 9,
+    "mechanics": ["Card Drafting", "Role Playing"],
+    "domains": ["Children's Games", "Customizable Games"]
+}
+
+###
+
+POST {{url}}/prediction
+Content-Type: application/json
+
+{
+    "year_published": 1975,
+    "min_players": 6,
+    "max_players": 13,
+    "play_time": 35,
+    "min_age": 10,
+    "mechanics": ["Tile Placement", "Variable Player Powers"],
+    "domains": ["Strategy Games", "Family Games"]
+}
+
+###
+
+POST {{url}}/prediction
+Content-Type: application/json
+
+{
+    "year_published": 1976,
+    "min_players": 7,
+    "max_players": 14,
+    "play_time": 36,
+    "min_age": 11,
+    "mechanics": ["Deck Bag and Pool Building", "Hand Management"],
+    "domains": ["Thematic Games", "Abstract Games"]
+}
+
+###
+
+POST {{url}}/prediction
+Content-Type: application/json
+
+{
+    "year_published": 1977,
+    "min_players": 8,
+    "max_players": 15,
+    "play_time": 37,
+    "min_age": 12,
+    "mechanics": ["Worker Placement", "Set Collection"],
+    "domains": ["Wargames", "Party Games"]
+}
+
+###
+
+POST {{url}}/prediction
+Content-Type: application/json
+
+{
+    "year_published": 1978,
+    "min_players": 1,
+    "max_players": 8,
+    "play_time": 38,
+    "min_age": 13,
+    "mechanics": ["Action Drafting", "Dice Rolling"],
+    "domains": ["Children's Games", "Customizable Games"]
+}
+
+###
+
+POST {{url}}/prediction
+Content-Type: application/json
+
+{
+    "year_published": 1979,
+    "min_players": 2,
+    "max_players": 9,
+    "play_time": 39,
+    "min_age": 14,
+    "mechanics": ["Card Drafting", "Role Playing"],
+    "domains": ["Strategy Games", "Family Games"]
+}
+
+###
+
+POST {{url}}/prediction
+Content-Type: application/json
+
+{
+    "year_published": 1980,
+    "min_players": 3,
+    "max_players": 10,
+    "play_time": 40,
+    "min_age": 15,
+    "mechanics": ["Tile Placement", "Variable Player Powers"],
+    "domains": ["Thematic Games", "Abstract Games"]
+}
+
+...
+(repeat similar patterns until you have 50)
