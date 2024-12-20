@@ -1,7 +1,7 @@
 services:
   backend-ai-service:
-    image: registry.gitlab.com/kdg-ti/integratieproject-2/2024-2025/team20/backend-ai-service:latest
+    image: registry.gitlab.com/kdg-ti/integratieproject-2/2024-2025/team20/backend-ai-service/python-ai:latest
     ports:
-      - "5000:5000"
+      - "8000:5000"
     environment:
-      GOOGLE_SERVICE_ACCOUNT_CRED_B64: ${GOOGLE_ENV}
+      GOOGLE_SERVICE_ACCOUNT_CRED_B64: ${GOOGLE_SERVICE_ACCOUNT_CRED_B64}
