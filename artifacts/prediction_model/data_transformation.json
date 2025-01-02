@@ -1,8 +1,50 @@
 {
-  "decade_bins" : [-3600, 1960, 1970, 1980, 1990, 2000, 2010, 2020, 2030],
-  "decade_labels" : ["pre-60s", "60s", "70s", "80s", "90s", "00s", "10s", "20s"],
-  "play_time_bins" : [0, 15, 30, 45, 60, 90, 120, 180, 240, 360, 660],
-  "play_time_labels" : ["15 min", "30 min", "45 min", "1 hr", "1.5 hr", "2 hrs", "3 hrs", "4 hrs", "6 hrs", "+6 hrs"],
+  "decade_bins": [
+    -3600,
+    1960,
+    1970,
+    1980,
+    1990,
+    2000,
+    2010,
+    2020,
+    2030
+  ],
+  "decade_labels": [
+    "pre-60s",
+    "60s",
+    "70s",
+    "80s",
+    "90s",
+    "00s",
+    "10s",
+    "20s"
+  ],
+  "play_time_bins": [
+    0,
+    15,
+    30,
+    45,
+    60,
+    90,
+    120,
+    180,
+    240,
+    360,
+    660
+  ],
+  "play_time_labels": [
+    "15 min",
+    "30 min",
+    "45 min",
+    "1 hr",
+    "1.5 hr",
+    "2 hrs",
+    "3 hrs",
+    "4 hrs",
+    "6 hrs",
+    "+6 hrs"
+  ],
   "mechanic_cluster_mapping": {
     "Acting": 3,
     "Action Drafting": 3,

@@ -92,18 +92,19 @@ class FeatureTransfomer:
         # Binning
         year_bin = self._bin(dto.year_published, self.decade_bins, self.decade_labels)
         play_time_bin = self._bin(dto.play_time, self.play_time_bins, self.play_time_labels)
-    
+
         # Creating Dict
         prediction_df = pd.DataFrame([{
             "Year Published Bins": year_bin,
             "Min Players": dto.min_players,
             "Max Players": dto.max_players,
             "Play Time Bins": play_time_bin,
-            "Min Age": dto.min_age
+            "Min Age": dto.min_age,
+            "Amount_of_Mechanics": len(dto.mechanics)
         }])
-    
+
         # Scaling
-        to_scale_columns = ["Min Players", "Max Players", "Min Age"]
+        to_scale_columns = ["Min Players", "Max Players", "Min Age", "Amount_of_Mechanics"]
         prediction_df[to_scale_columns] = self.scaler.transform(prediction_df[to_scale_columns])
     
         # Domains
