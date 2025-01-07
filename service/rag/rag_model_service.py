@@ -34,6 +34,7 @@ class RAGModelQueryService:
             
             # Use the RAG service to create the prompt
             prompt = self.rag_prompt_service.create_prompt(request, history)
+            logger.info(f"Prompt: \n{prompt}")
             
             if prompt is None:
                 return LLMResponseDTO(
