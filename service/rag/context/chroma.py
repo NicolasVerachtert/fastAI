@@ -138,8 +138,8 @@ def split_documents(documents: List[Document]) -> list[Document]:
     """
     try:
         text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=500,
-            chunk_overlap=100,
+            chunk_size=250,
+            chunk_overlap=50,
             length_function=len,
             is_separator_regex=False,
         )
