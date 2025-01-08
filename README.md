@@ -1,6 +1,10 @@
-# FastAPI RAG-Based Chatbot API
+# FastAPI RAG-Based Chatbot & Prediction Model API
 
 This project provides a **FastAPI-based API** that delivers responses using a Retrieval-Augmented Generation (RAG) system powered by Large Language Models (LLMs). The system combines document-based context and conversational history to deliver highly relevant responses.
+
+This project also provides an API to access the prediction models created on the instructions of the guidelines of the course.
+
+This project has been copied over from Gitlab after completing the course [**Integratie Project 2**](https://bamaflexweb.kdg.be/BMFUIDetailxOLOD.aspx?a=147355&b=1&c=1) from the KdG - Toegepaste Informatica.
 
 ---
 
